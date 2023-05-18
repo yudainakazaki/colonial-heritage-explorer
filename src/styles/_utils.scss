@@ -1,0 +1,25 @@
+@use 'variables' as *;
+
+.icon-main {
+    font-size: $font-m;
+    color: $icon-main;
+
+    &:hover {
+        color: $blue
+    }
+}
+
+.icon-blue {
+    font-size: $font-m;
+    color: white;
+    background-color: $blue;
+    border-radius: $radius;
+}
+
+.icon-btn {
+    height: $len-4;
+    width: $len-4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

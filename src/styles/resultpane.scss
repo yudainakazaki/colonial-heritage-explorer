@@ -1,0 +1,12 @@
+@use 'variables' as *;
+
+.resultpane {
+	position: absolute;
+	height: 95svh;
+	width: calc($len-8*6);
+	margin: 10px;
+	background-color: $bg;
+	z-index: 1;
+	border-radius: 5px;
+	box-shadow: $shadow;
+}

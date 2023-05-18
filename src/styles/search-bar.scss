@@ -1,0 +1,33 @@
+@use 'variables' as *;
+
+.search-bar {
+    position: absolute;
+    top: $len-2;
+    left: $len-2;
+    background: $bg;
+    box-shadow: $shadow;
+    border-radius: $radius;
+    width: calc($len-10 * 4);
+    height: $len-6;
+    z-index: 100;
+    padding: $len-1;
+    justify-content: left;
+    align-items: center;
+
+    &__textarea {
+        outline: none;
+        margin: 0 $len-2;
+        width: 60%;
+
+        &:focus {
+            outline: none;
+        }
+    }
+
+    &__bar {
+        border-left: 1px solid $icon-main;
+        width: 2px;
+        height: $len-3;
+        margin: 0 $len-2;
+    }
+}
