@@ -2,11 +2,12 @@
 
 .resultpane {
 	position: absolute;
-	height: 95svh;
-	width: calc($len-8*6);
-	margin: 10px;
+	height: 92vh;
+	width: calc($len-10 * 4 + $len-2);
+    padding: $len-2;
+	margin: $len-1;
 	background-color: $bg;
 	z-index: 1;
-	border-radius: 5px;
+	border-radius: $radius;
 	box-shadow: $shadow;
 }
