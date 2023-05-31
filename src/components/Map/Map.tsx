@@ -26,7 +26,7 @@ const SetView = ({ animateRef, coor }: any) => {
     
     const map = useMap();
 
-    map.setView(processCenter(coor), map.getZoom(), {
+    map.setView(coor, map.getZoom(), {
         animate: animateRef.current || false,
     })
     
@@ -68,7 +68,7 @@ const Map = ({ data, originalCenter, emitBounds }: Props) => {
 
     useEffect(() => {
         console.log("originalCenter: "+originalCenter.lat + " , " + originalCenter.lng)
-        setCenter(originalCenter);
+        setCenter(processCenter(originalCenter));
     }, [originalCenter]);
 
     return (
