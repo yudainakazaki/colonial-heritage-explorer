@@ -20,7 +20,14 @@ export default function object(id: string){
                 sdo:contentLocation/sdo:name ?loc_content;
                 foaf:depiction ?image;
                 sdo:artform ?artform;
+                sdo:provider ?provider;
                 sdo:locationCreated/skos:closeMatch ?geonames.
+                optional {
+                    ?object
+                        sdo:height/sdo:value ?height;
+                        sdo:depth/sdo:value ?depth;
+                        sdo:width/sdo:value ?width .
+                }
                 SERVICE <http://factforge.net/repositories/ff-news> {
                     ?geonames 
                         wgs84:lat ?lat;

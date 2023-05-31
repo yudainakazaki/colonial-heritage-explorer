@@ -1,0 +1,12 @@
+@use 'variables' as *;
+
+.msg {
+    background-color: $sub-bg;
+    color: white;
+    width: calc($len-9 * 2);
+    border-radius: $radius;
+    font-size: $font-xs;
+    font-weight: 400;
+    z-index: 10;
+    padding: $len-0 $len-1;
+}

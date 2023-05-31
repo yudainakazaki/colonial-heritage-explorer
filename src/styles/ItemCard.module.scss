@@ -1,0 +1,41 @@
+@use 'variables' as *;
+
+.card {
+    height: calc($len-8 * 3);
+    width: calc($len-10 * 4 + $len-2);
+    background-color: white; 
+    padding: $len-3;
+    justify-content: space-between;
+    align-items: top;
+    border-bottom: 1px solid $border;
+
+    &__info {
+        width: calc($len-10 * 2 + $len-2);
+    }
+
+    &__img {
+        border-radius: $radius;
+        height: auto;
+        width: calc($len-6 * 2);
+        overflow: hidden;
+        
+        &__body {
+            border-radius: $radius;
+        }
+    }
+
+    &:hover {
+        background-color: $hover-bg;
+    }
+}
+
+.msg {
+    background-color: $sub-bg;
+    color: white;
+    width: calc($len-9 * 2);
+    border-radius: $radius;
+    font-size: $font-xs;
+    font-weight: 400;
+    z-index: 10;
+    padding: $len-0 $len-1;
+}

@@ -1,8 +1,18 @@
 import React, { useState } from 'react'
 import '@/styles/search-bar.scss'
 import '@/styles/_utils.scss'
+import { BeatLoader } from 'react-spinners'
+import { State } from '@/Types'
 
-const SearchBar = () => {
+type Props = {
+    emitSearch: (keyword: string) => void;
+    emitFilterClick: () => void;
+    clearSearch: () => void;
+    isLoading: boolean;
+    state: State;
+}
+
+const SearchBar = ({emitSearch, clearSearch, emitFilterClick, isLoading, state}: Props) => {
 
     const [keyword, setKeyword] = useState('');
 
@@ -10,8 +20,13 @@ const SearchBar = () => {
         setKeyword(e.target.value);
     }
 
-    const handleClick = (e: any) => {
-        console.log(keyword);
+    const handleClickSearch = () => {       
+        emitSearch(keyword);
+    }
+
+    const handleClickClear = () => {
+        clearSearch(); 
+        setKeyword('');
     }
 
     return (
@@ -23,13 +38,24 @@ const SearchBar = () => {
                 value={keyword}
                 onChange={handleChange}
             />
-            <button className='icon-btn' onClick={handleClick}>
-                <i className='bx bx-search icon-main'></i>
+            <button className='icon-btn' onClick={handleClickSearch}>
+                <i className='bx bx-search icon-main' />
             </button>
-            <span className='search-bar__bar'></span>
-            <button className='icon-btn'>
-                <i className='bx bx-filter icon-blue'></i>
-            </button>
+            <span className='search-bar__bar' />
+            {
+                isLoading ? 
+                    <div className='icon-btn icon-hover'>
+                        <BeatLoader size={8} speedMultiplier={0.6} color='grey'/> 
+                    </div> : 
+                !isLoading && (state === 'result' || state === 'resultDetail') ? 
+                    <button className='icon-btn icon-hover' onClick={handleClickClear}>
+                        <i className='bx bx-x grey' />
+                    </button> : 
+                !isLoading && state === 'search' ? 
+                <button className='icon-btn' onClick={ emitFilterClick }>
+                    <i className='bx bx-filter icon-blue' />
+                </button> : null
+            }
         </div>
     )
 }

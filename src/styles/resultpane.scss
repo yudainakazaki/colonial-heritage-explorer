@@ -1,13 +1,36 @@
 @use 'variables' as *;
 
 .resultpane {
-	position: absolute;
-	height: 92vh;
-	width: calc($len-10 * 4 + $len-2);
-    padding: $len-2;
-	margin: $len-1;
-	background-color: $bg;
-	z-index: 1;
-	border-radius: $radius;
-	box-shadow: $shadow;
+    position: absolute;
+    height: calc(100vh - 2 * $len-1);
+    width: calc($len-10 * 4 + $len-2);
+    margin: $len-1;
+    background-color: $bg;
+    z-index: 1;
+    border-radius: $radius;
+    box-shadow: $shadow;
+
+    &__spacer {
+        height: calc($len-6 + $len-1);
+    }
+
+    &__container {
+        overflow-y: scroll;
+        scroll-behavior: smooth;
+        height: calc(100vh - 2 * $len-1 - $len-8);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    &__loader {
+        margin: auto;
+    }
+
+    &__detail {
+        position: absolute;
+        left: calc(100% + $len-2);
+        top: $len-2
+    }
 }
+

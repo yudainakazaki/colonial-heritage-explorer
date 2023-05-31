@@ -1,0 +1,59 @@
+@use 'variables' as *;
+
+.card {
+    height: calc($len-10 * 8 + $len-2);
+    width: calc($len-10 * 4 + $len-2);
+    background-color: white; 
+    align-items: top;
+    border-bottom: 1px solid $border;
+    border-radius: $radius;
+
+
+    &__img {
+        border-radius: $radius $radius 0 0;
+        overflow: hidden;
+        height: calc($len-9 * 4);
+        width: auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        &__body {
+            height: 100%;
+        }
+    }
+
+    &__info {
+        padding: $len-3;
+    }
+
+    .icon {
+        color: $blue;
+
+        &:hover {
+            color: $light-blue;
+        }
+    }
+
+    &__close {
+        background-color: white;
+        position: absolute;
+        top: $len-2;
+        right: $len-2;
+        width: $len-4;
+        height: $len-4;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 50%;
+
+        &:hover {
+            background-color: $hover-bg;
+        }
+    }
+
+    .card__loading {
+        height: 100%;
+        margin: auto;
+    }
+}

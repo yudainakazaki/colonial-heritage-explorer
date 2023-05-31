@@ -28,6 +28,6 @@
         border-left: 1px solid $icon-main;
         width: 2px;
         height: $len-3;
-        margin: 0 $len-2;
+        margin: 0 calc($len-1 + $len-0);
     }
 }

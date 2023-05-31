@@ -1,0 +1,14 @@
+@use 'variables' as *;
+
+.bg {
+    height: 100%;
+    width: 100%;
+    background-color: grey; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &__text {
+        color: white;
+    }
+}

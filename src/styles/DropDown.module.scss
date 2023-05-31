@@ -1,0 +1,60 @@
+@use 'variables' as *;
+
+.title {
+    font-size: $font-xs;
+}
+
+.dropdown {
+    background-color: white;
+    width: calc($len-9*4);
+    height: calc($len-5);
+    border-radius: $radius;
+    border: 1px solid $icon-main;
+
+    &__mainButton {
+        height: 100%;
+        width: 100%;
+
+        &__title {
+            color: $icon-main;
+            font-size: $font-s;
+        }
+
+        &__icon {
+            color: $icon-main;
+            font-size: $font-s;
+        }
+    }
+
+    &__list {
+        position: relative;
+        max-height: calc($len-8 * 3);
+        z-index: 100;
+        border-radius:$radius;
+        background-color: white;
+        width: calc($len-9*4);  
+        box-shadow: $shadow;
+        overflow-y: scroll;
+
+        &__item {
+            border-radius:$radius;
+            
+            &__text {
+                font-size: $font-s;
+                color: $icon-main;
+                height: $len-5;
+                display: flex;
+                align-items: center;
+            }
+
+            &:hover {
+                background-color: $hover-bg;
+            }
+        }
+
+        &__selected {
+            border-radius:$radius;
+            background-color: $hover-bg
+        }
+    }
+}

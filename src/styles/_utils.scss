@@ -10,16 +10,22 @@
 }
 
 .icon-blue {
-    font-size: $font-m;
     color: white;
     background-color: $blue;
     border-radius: $radius;
 }
 
 .icon-btn {
+    font-size: $font-m;
     height: $len-4;
     width: $len-4;
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.icon-hover {
+    &:hover {
+        color: $blue;
+    }
 }

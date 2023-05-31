@@ -1,7 +1,16 @@
+@use 'variables' as *;
+
 .browse {
     background-color: white;
 
     &__title {
         font-size: 32px;
+    }
+
+    .detail-modal {
+        position: absolute;
+        top: $len-2;
+        left: calc($len-10 * 4 + $len-4);
+        z-index: 10;
     }
 }

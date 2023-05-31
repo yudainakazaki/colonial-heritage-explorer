@@ -1,0 +1,72 @@
+@use 'variables' as *;
+
+.bg {
+    position: absolute;
+    height: 100vh;
+    width: 100vw;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
+
+.modal {
+    position: absolute;
+    background-color: white;
+    height: fit-content;
+    width: fit-content;
+    padding: $len-2;
+    position: relative;
+    border-radius: $radius;
+
+    &__header {
+        font-size: $font-m;
+    }
+
+    &__close {
+        position: absolute;
+        font-size: $font-xs;
+        top: $len-3;
+        right: $len-2;
+        color: $blue;
+
+        &:hover {
+            color: $light-blue;
+        }
+    }
+
+    &__title {
+
+        &__title {
+            font-size: $font-xs;
+        }
+
+        &__body {
+            background-color: white;
+            width: calc($len-9*4);
+            height: calc($len-5);
+            border-radius: $radius;
+            border: 1px solid $icon-main;
+        }
+    }
+
+    &__checkbox {
+        font-size: $font-xs;
+    }
+
+    &__button {
+        width: calc($len-8*2);
+        height: $len-5;
+        border-radius: $radius;
+        color: white;
+        
+        &__reset{
+            background-color: $sub-bg;
+        }
+
+        &__search {
+            background-color: $blue;
+        }
+    }
+}
