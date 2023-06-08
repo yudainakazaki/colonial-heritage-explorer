@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import 'leaflet/dist/leaflet.css'
 import { MapContainer, TileLayer, Marker, Popup, ZoomControl, useMap, useMapEvents } from 'react-leaflet'
 import '@/styles/map.scss'
-import 'leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css'; // Re-uses images from ~leaflet package
-import 'leaflet-defaulticon-compatibility'
+//import 'leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css'; // Re-uses images from ~leaflet package
+//import 'leaflet-defaulticon-compatibility'
 import { CardAttributes, Bounds } from '@/Types';
 import { useRef } from 'react';
 import markerIcon from './markerIcon';
@@ -69,7 +69,6 @@ const Map = ({ data, selectedPoint, originalCenter, emitBounds }: Props) => {
             center={center}
             zoom={3} 
             zoomControl={false}
-            maxBounds={maxBounds}
         >
             <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -94,7 +93,7 @@ const Map = ({ data, selectedPoint, originalCenter, emitBounds }: Props) => {
                     )
                 })
             }
-            {!!selectedPoint && <Marker icon={markerIcon('red')} position={selectedPoint} forceZIndex={100000}/>}
+            {!!selectedPoint && <Marker icon={markerIcon('red')} position={selectedPoint}/>}
         </MapContainer>
     )
 }
