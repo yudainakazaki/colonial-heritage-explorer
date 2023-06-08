@@ -1,35 +1,40 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import '@/styles/resultpane.scss'
 import { CardAttributes } from '@/Types'
-import { ItemCard, NoData } from '@/components'
+import { ItemCard, Msg } from '@/components'
+import { LatLng } from '@/Types'
 
 type Props = {
+    isError: Boolean,
     data: CardAttributes[],
     emitId: (id: string) => void;
+    emitPoint: (latlng: LatLng) => void;
 }
 
-const ResultPane = ({data, emitId}: Props) => {
+const ResultPane = ({data, emitId, emitPoint, isError}: Props) => {
 
-    const handleEmit = (id: string) => {
+    const handleEmit = (id: string, latlng: LatLng) => {
         emitId(id);
-        console.log(id);
+        emitPoint(latlng);
     }
 
     return (
         <div className='resultpane'>
             <div className='resultpane__spacer' />
             <div className='resultpane__container'>
-                {data.length === 0 ? 
-                <NoData /> :
-                Array.isArray(data) && data.map((item: CardAttributes, i: any) => {
-                    return (
-                        <ItemCard 
-                            key={i}
-                            data={item}
-                            emit={handleEmit}
-                        />
-                    )
-                })}
+                {
+                    isError ? <Msg type='error'/> :
+                    data.length === 0 ? <Msg type='nodata' /> :
+                    Array.isArray(data) && data.map((item: CardAttributes, i: any) => {
+                        return (
+                            <ItemCard 
+                                key={i}
+                                data={item}
+                                emit={handleEmit}
+                            />
+                        )
+                    })
+                }
             </div>
         </div>
     )

@@ -22,7 +22,7 @@ export default function DetailCard({data, emitClose}: Props) {
                 <div className={`flex flex-col ${style.card__info}`}>
                     <div className='flex justify-between mb-2'>
                         <span className="text-xl">{ data?.title }</span>
-                        <a href="https://linkeddata.cultureelerfgoed.nl/colonialheritage/colonialobjects/id/13289" target="_blank" title='external link to the object detail'>
+                        <a href={data.url} target="_blank" title='external link to the object detail'>
                             <span className={`bx bx-link-external text-xl w-5 h-5 icon ${style.icon}`} />
                         </a>
                     </div>
@@ -34,6 +34,12 @@ export default function DetailCard({data, emitClose}: Props) {
                     { data.dimension?.height && data.dimension?.width && data.dimension?.depth && 
                         <IconLabel size='l' icon='ruler' text={processDimension(data.dimension).val} msg={processDimension(data.dimension).msg}/> }
                     <IconLabel size='l' icon='key' text={data.keyword} msg='Keywords of the object.'/>
+                    {!data.latlng && 
+                        <>
+                            <hr className="my-2"/>
+                            <IconLabel size='l' icon='error-alt' text='Map data is not available.' msg='Map does not show the location of this object.'/>
+                        </>
+                    }
                     {/* <IconLabel size='l' icon='bank' text={data.provider} msg='Provider of the object.'/> */}
                 </div>
                 <button className={`${style.card__close}`} onClick={emitClose}>

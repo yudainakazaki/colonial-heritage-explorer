@@ -20,21 +20,22 @@ export const processData = (data: any, type: DataType) => {
             material: data?.material_list || 'Not available',
             keyword: data?.keywords_list || 'Not available',
             provider: data?.provider || 'Not available',
-            url: data?.url || 'Not available',
+            url: data?.object || 'Not available',
             image: data?.image || undefined,
-            geoLocation: [parseFloat(data?.lat), parseFloat(data?.long)],
+            latlng: data?.lat !== null && data?.lng !== null ? {lat: parseFloat(data?.lat), lng: parseFloat(data?.lng)} : undefined,
         } as DetailAttributes;
     
     else
         return {
             id: data.id || ' - ',
+            object: data.object || '',
             title: data.title || ' - ',
             location: data.loc_created || ' - ',
             creator: data.creator || ' - ',
             material: data.materials || ' - ',
             keyword: data.keywords || ' - ',
             image: data.image || undefined,
-            geoLocation: [parseFloat(data?.lat), parseFloat(data?.long)],
+            latlng: data?.lat !== null && data?.lng !== null ? {lat: parseFloat(data?.lat), lng: parseFloat(data?.lng)} : undefined,
         } as CardAttributes;
 }
 

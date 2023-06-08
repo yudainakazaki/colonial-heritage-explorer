@@ -3,18 +3,22 @@ export type SearchQueries = {
     artform?: string | undefined,
     location?: string | undefined,
     material?: string | undefined,
-    coordinates?: Bounds,
+    bounds?: Bounds,
 }
 
 export type CardAttributes = {
     id: string,
+    object: string,
     title: string,
     location: string,
     creator: string,
     material: string,
     keyword: string,
     image: string | any,
-    geoLocation: [number, number]
+    latlng: {
+        lat: number, 
+        lng: number
+    }
 }
 
 export type DetailAttributes = {
@@ -34,7 +38,10 @@ export type DetailAttributes = {
     image: string | any,
     provider: string,
     url: string,
-    geoLocation: [number, number]
+    latlng: {
+        lat: number, 
+        lng: number
+    }
 }
 
 export type Dimension = {
@@ -43,7 +50,7 @@ export type Dimension = {
     depth: number
 }
 
-export type State = 'search' | 'result' | 'resultDetail' | 'loading';
+export type State = 'search' | 'result' | 'resultDetail' | 'loading' | 'error';
 
 export type Filters = {
     title: string,
@@ -54,12 +61,17 @@ export type Filters = {
 }
 
 export type Bounds = {
-    southWest: {
+    _southWest: {
         lat: number,
-        long: number,
+        lng: number,
     },
-    northEast: {
+    _northEast: {
         lat: number,
-        long: number,
+        lng: number,
     },
 } | undefined
+
+export type LatLng = {
+    lat: number, 
+    lng: number,
+}

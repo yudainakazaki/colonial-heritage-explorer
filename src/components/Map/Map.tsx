@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import 'leaflet/dist/leaflet.css'
 import { MapContainer, TileLayer, Marker, Popup, ZoomControl, useMap, useMapEvents, useMapEvent } from 'react-leaflet'
 import '@/styles/map.scss'
@@ -6,9 +6,11 @@ import 'leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility
 import 'leaflet-defaulticon-compatibility'
 import { CardAttributes, Bounds } from '@/Types';
 import { useRef } from 'react';
+import markerIcon from './markerIcon';
 
 type Props = {
     data: CardAttributes[],
+    selectedPoint: {lat: number, lng: number} | undefined,
     originalCenter: {lat: number, lng: number},
     emitBounds: (bounds: Bounds) => void,
 }
@@ -18,15 +20,14 @@ const northEast = [270, -270];
 const maxBounds = [southWest, northEast];
 
 const processCenter = (coor : {lat: number, lng: number}) : {lat: number, lng: number} => {
-    return {lat: coor.lat, lng: (coor.lng - 90)};
+    return {lat: coor.lat, lng: (coor.lng - 20)};
 }
 
-const SetView = ({ animateRef, coor }: any) => {
+const SetView = ({ animateRef, center }: any) => {
 
-    
     const map = useMap();
 
-    map.setView(coor, map.getZoom(), {
+    map.setView(center, map.getZoom(), {
         animate: animateRef.current || false,
     })
     
@@ -38,11 +39,9 @@ const GetBoundary = ({ emitBounds, emitCenter }: any) => {
     const updateBounds = (e: any) => {
         emitBounds(e.target.getBounds());
         emitCenter(e.target.getCenter());
-        console.log(e.target);
-        console.log(e.target.getCenter());
     }
 
-    const map = useMapEvents({
+    useMapEvents({
         dragend: updateBounds,
         zoomend: updateBounds,
     })
@@ -50,24 +49,17 @@ const GetBoundary = ({ emitBounds, emitCenter }: any) => {
     return null;
 }
 
-const Map = ({ data, originalCenter, emitBounds }: Props) => {	
+const Map = ({ data, selectedPoint, originalCenter, emitBounds }: Props) => {	
 
     const animateRef = useRef(false);
-    //const [bounds, setBounds] = useState(undefined as Bounds);
 
-    const getBounds = (coor: Bounds) => {
-        //setBounds(coor);
-        emitBounds(coor);
+    const getBounds = (bounds: Bounds) => {
+        emitBounds(bounds);
     }
 
     const [center, setCenter] = useState(originalCenter);
-    
-    useEffect(() => {
-        console.log("originalCenter: "+originalCenter.lat + " , " + originalCenter.lng)
-    }, [center]);
 
     useEffect(() => {
-        console.log("originalCenter: "+originalCenter.lat + " , " + originalCenter.lng)
         setCenter(processCenter(originalCenter));
     }, [originalCenter]);
 
@@ -75,7 +67,7 @@ const Map = ({ data, originalCenter, emitBounds }: Props) => {
         <MapContainer 
             className="map"
             center={center}
-            zoom={3.4} 
+            zoom={3} 
             zoomControl={false}
             maxBounds={maxBounds}
         >
@@ -83,28 +75,26 @@ const Map = ({ data, originalCenter, emitBounds }: Props) => {
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
-            <SetView animateRef={animateRef} coor={center}/>
             <GetBoundary emitBounds={getBounds} emitCenter={(val: any) => {setCenter(val)}}/>
+            <SetView animateRef={animateRef} center={center}/> 
             <ZoomControl position="bottomright" />
             {
-                        Array.isArray(data) && data.map((item, i) => {
-                            return (
-                                <Marker
-                                    position={item.geoLocation}
-                                    key = {i}
-                                    eventHandlers={{
-                                        click: (e: any) => {
-                                            console.log('marker clicked', e, item.geoLocation)
-                                        },
-                                    }}
-                                >
-                                    <Popup>
-                                        {`${item.geoLocation[0]}, ${item.geoLocation[1]}`}
-                                    </Popup>
-                                </Marker>
-                            )
-                        })
+                Array.isArray(data) && data.length > 0 && data.map((item, i) => {
+                    return (
+                        item.latlng !== undefined && 
+                        <Marker
+                            icon={markerIcon('blue')}
+                            position={item.latlng}
+                            key = {i}
+                        >
+                            <Popup>
+                                <a href={item.object} target='_blank'>TriplyDB<i className='bx bx-link-external ml-1' /></a>
+                            </Popup>
+                        </Marker>
+                    )
+                })
             }
+            {!!selectedPoint && <Marker icon={markerIcon('red')} position={selectedPoint} forceZIndex={100000}/>}
         </MapContainer>
     )
 }

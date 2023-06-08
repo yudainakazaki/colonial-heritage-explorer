@@ -2,16 +2,17 @@ import { CardAttributes } from "@/Types";
 import IconLabel from "./IconLabel";
 import style from '@/styles/ItemCard.module.scss'
 import { NoImage } from "@/components";
+import { LatLng } from "leaflet";
 
 type Props = {
-    emit: (id: string) => void;
+    emit: (id: string, latlng: {lat: number, lng: number}) => void;
     data: CardAttributes;
 }
 
 export default function ItemCard({emit, data}: Props) {
 
     const onClick = () => {
-        emit(data.id);
+        emit(data.id, data.latlng);
     }
 
     return (

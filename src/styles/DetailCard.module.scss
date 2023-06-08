@@ -8,18 +8,21 @@
     border-bottom: 1px solid $border;
     border-radius: $radius;
 
-
     &__img {
         border-radius: $radius $radius 0 0;
         overflow: hidden;
         height: calc($len-9 * 4);
-        width: auto;
+        width: calc($len-10 * 4 + $len-2);
         display: flex;
         justify-content: center;
         align-items: center;
+        overflow-y: auto;
+        overflow-x: auto;
 
         &__body {
-            height: 100%;
+            height: auto;
+            width: auto;
+            margin: auto
         }
     }
 

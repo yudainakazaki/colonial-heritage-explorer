@@ -47,10 +47,17 @@ const FilterModal = ({emitClose, emitSearch}: Props) => {
         useLocation: false,
     } as Filters
 
+    const initDisabledStatus = {
+        art: false,
+        loc: false,
+        mat: false
+    }
+
     const [artforms, setArtforms] = useState([] as string[]);
     const [locations, setLocations] = useState([] as string[]);
     const [materials, setMaterials] = useState([] as string[]);
     const [filter, setFilter] = useState(initState)
+    const [disableDropDown, setDisableDropDown] = useState(initDisabledStatus)
 
     const fetchSelectList = async () => {
         
@@ -72,6 +79,23 @@ const FilterModal = ({emitClose, emitSearch}: Props) => {
         setFilter({...filter, useLocation: !filter.useLocation});
     }
 
+    const handleDropDown = (status: any, type: any) => { 
+        switch(type){
+            case 'art':
+                if(status === 'open') setDisableDropDown({...disableDropDown, art: false, loc: true, mat: true})
+                else setDisableDropDown(initDisabledStatus)
+                break;
+            case 'loc':
+                if(status === 'open') setDisableDropDown({...disableDropDown, art: true, loc: false, mat: true})
+                else setDisableDropDown(initDisabledStatus)
+                break;
+            case 'mat':
+                if(status === 'open') setDisableDropDown({...disableDropDown, art: true, loc: true, mat: false})
+                else setDisableDropDown(initDisabledStatus)
+                break;
+        }
+    }
+
     const handleSetVal = (val : string, index: number) => {
         switch (index) {
             case 0: setFilter({...filter, artform: val}); break;
@@ -82,6 +106,7 @@ const FilterModal = ({emitClose, emitSearch}: Props) => {
 
     const handleReset = () => {
         setFilter(initState);
+        setDisableDropDown(initDisabledStatus);
     }
 
     const handleSend = () => {
@@ -115,11 +140,14 @@ const FilterModal = ({emitClose, emitSearch}: Props) => {
                         />
                     </div>
                 </div>
-                <DropDownMenu title='Art form' items={artforms} val={filter.artform} emitVal={(e) => handleSetVal(e, 0)} />
-                <DropDownMenu title='Location of creation' items={locations} val={filter.location} emitVal={(e) => handleSetVal(e, 1)} />
-                <DropDownMenu title='Material' items={materials} val={filter.material} emitVal={(e) => handleSetVal(e, 2)} />
-                <div className={`flex justify-between mt-8 mb-4 ${style.modal__checkbox}`}>
-                    <span>Search in the seleceted area</span>
+                <DropDownMenu title='Art form' items={artforms} val={filter.artform} emitVal={(e) => handleSetVal(e, 0)} emitOpen={(status) => handleDropDown(status, 'art')} disabled={disableDropDown.art}/>
+                <DropDownMenu title='Location of creation' items={locations} val={filter.location} emitVal={(e) => handleSetVal(e, 1)} emitOpen={(status) => handleDropDown(status, 'loc')} disabled={disableDropDown.loc}/>
+                <DropDownMenu title='Material' items={materials} val={filter.material} emitVal={(e) => handleSetVal(e, 2)} emitOpen={(status) => handleDropDown(status, 'mat')} disabled={disableDropDown.mat} />
+                <div className={`flex justify-between mt-6 mb-4 ${style.modal__checkbox}`}>
+                    <span className='flex items-center'>
+                        Search in the seleceted area
+                        <Info msg='The map of the area shown in your screen is the range of the search.' />
+                    </span>
                     <input 
                         className='mx-2'
                         type="checkbox" 

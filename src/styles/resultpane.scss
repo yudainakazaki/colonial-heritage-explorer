@@ -15,7 +15,9 @@
     }
 
     &__container {
-        overflow-y: scroll;
+        // overflow-y: scroll;
+        overflow-y: auto;
+        overflow-x: auto;
         scroll-behavior: smooth;
         height: calc(100vh - 2 * $len-1 - $len-8);
         display: flex;

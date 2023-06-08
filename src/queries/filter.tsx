@@ -1,98 +1,79 @@
 import { SearchQueries } from "@/Types";
 
-export default function filterSearch(queries: SearchQueries) {
+export default function filterSearch(queries: SearchQueries, useLocation: boolean) {
 
     const hasFilter = !!queries.title || 
                         !!queries.artform ||
                         !!queries.location ||
                         !!queries.material ||
-                        !!queries.coordinates;
+                        !!queries.bounds || 
+                        !!useLocation
 
-    //console.log(queries.coordinates);
+    console.log(queries.bounds);
     
-    var query = `
-PREFIX foaf: <http://xmlns.com/foaf/0.1/>
-PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX cidoc-crm: <http://www.cidoc-crm.org/cidoc-crm/>
-PREFIX schema: <https://schema.org/>
-PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
-PREFIX sdo: <https://schema.org/>
-PREFIX wgs84: <http://www.w3.org/2003/01/geo/wgs84_pos#>
-PREFIX dct: <http://purl.org/dc/terms/>
-select distinct ?id ?title ?creator ?image ?artform ?keywords ?materials (sample(?lat) as ?lat) (sample(?long) as ?long) ?loc_content ?loc_created
-where {
-	?object
-    	sdo:identifier ?id;
-      	dct:title ?title;
-		dct:creator ?creator;
-        foaf:depiction ?image;
-        sdo:artform ?artform;
-    	sdo:locationCreated/skos:closeMatch ?geonames.
-      	SERVICE <http://factforge.net/repositories/ff-news> {
-			?geonames 
-      			wgs84:lat ?lat ;
-      			wgs84:long ?long .
-		}
-		{
-  			select ?id (GROUP_CONCAT(DISTINCT ?keywords; SEPARATOR=", ") AS ?keywords)
-            where {
-                ?object sdo:identifier ?id;
-                        sdo:keywords ?keywords .
-            }
-            group by ?id
-  		}
-		{
-  			select ?id (GROUP_CONCAT(DISTINCT ?material; SEPARATOR=", ") AS ?materials)
-            where {
-                ?object sdo:identifier ?id;
-						sdo:material ?material .
-            }
-            group by ?id
-  		}
-		{
-			select ?id (GROUP_CONCAT(DISTINCT ?loc_content; SEPARATOR=", ") AS ?loc_content)
-    		where {
-    			?object 		
-        			sdo:identifier ?id;
-        			sdo:contentLocation/sdo:name ?loc_content .
-    		}
-    		group by ?id
-  		}
-  		{
-			select ?id (GROUP_CONCAT(DISTINCT ?loc_created; SEPARATOR=", ") AS ?loc_created)
-    		where {
-    			?object 		
-        			sdo:identifier ?id;
-        			sdo:locationCreated/sdo:name ?loc_created .
-    		}
-    		group by ?id
-  		}
-        `;
-    
+    var query =
+    `PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+    PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+    PREFIX cidoc-crm: <http://www.cidoc-crm.org/cidoc-crm/>
+    PREFIX schema: <https://schema.org/>
+    PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+    PREFIX sdo: <https://schema.org/>
+    PREFIX wgs84: <http://www.w3.org/2003/01/geo/wgs84_pos#>
+    PREFIX dct: <http://purl.org/dc/terms/>
+    PREFIX float: <http://www.w3.org/2001/XMLSchema#float>
+    PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+    select * { {
+        select distinct ?id ?title ?creator ?image ?artform ?geonames 
+        (GROUP_CONCAT(DISTINCT ?keywords; SEPARATOR=", ") as ?keywords) 
+        (GROUP_CONCAT(DISTINCT ?material; SEPARATOR=", ") as ?materials) 
+        (GROUP_CONCAT(DISTINCT ?loc_content; SEPARATOR=", ") as ?loc_content) 
+        (GROUP_CONCAT(DISTINCT ?loc_created; SEPARATOR=", ") as ?loc_created) 
+        (sample(float:(?lat)) as ?lat) (sample(float:(?lng)) as ?lng)
+        where {
+            optional {?object sdo:identifier ?id.}
+            optional {?object dct:title ?title.}
+            optional {?object dct:creator ?creator.}
+            optional {?object foaf:depiction ?image.}
+            optional {?object sdo:artform ?artform.}
+            optional {?object sdo:locationCreated/sdo:name ?loc_created .}
+            optional {?object sdo:locationCreated/sdo:name ?loc_content .}
+            optional {?object sdo:keywords ?keywords .}
+      		optional {?object sdo:material ?material .}
+            optional {
+                ?object sdo:locationCreated/skos:closeMatch ?geonames.
+                SERVICE <http://factforge.net/repositories/ff-news> {
+                    ?geonames 
+                        wgs84:lat ?lat ;
+                        wgs84:long ?lng .
+                }
+            } } group by ?id ?object ?title ?creator ?image ?artform ?geonames } `;
+
     console.log('hasFilter: ' + hasFilter);
     if(hasFilter){
         var filter = 'filter ('.concat(
             queries.title ? `(contains(?title, "${queries.title}") || contains("${queries.title}", ?title)) && ` : '',
             queries.material ? `contains(?materials, "${queries.material}") && ` : '',
             queries.artform ? `?artform = "${queries.artform}" && ` : '',
-            queries.location ? `contains(?loc_created, "${queries.location}") && ` : '',
-            queries.coordinates ? `
-                float:(?lat) > ${queries.coordinates?.southWest?.lat} && 
-                float:(?lat) < ${queries.coordinates?.northEast?.lat} &&
-                float:(?long) > ${queries.coordinates?.southWest?.long} && 
-                float:(?long) < ${queries.coordinates?.northEast?.long}
+            queries.location ? `contains(lcase(str(?loc_created)), lcase(str("${queries.location}"))) && ` : '',
+            useLocation && queries.bounds ? `
+                datatype(?lat) in (xsd:string, xsd:float) &&
+                datatype(?lng) in (xsd:string, xsd:float) &&
+                ?lat > ${queries.bounds?._southWest?.lat} && 
+                ?lat < ${queries.bounds?._northEast?.lat} &&
+                ?lng > ${queries.bounds?._southWest?.lng} && 
+                ?lng < ${queries.bounds?._northEast?.lng}
             ` : ''
         );
         
         if (filter.slice(-3) == '&& ') filter = filter.slice(0, -3);
                     
-        query = query.concat(filter, ') .');
+        query = query.concat(filter, ') . ');
     }
+    query = query.concat('} ');
+    //query = query.concat('} group by ?id ?object ?title ?creator ?image ?artform ?geonames ');
 
-    query = query.concat('} group by ?id ?title ?creator ?image ?artform ?keywords ?materials ?loc_content ?loc_created');
-
-    //console.log(query);
+    console.log(query);
     query = query.replace(/[\r\n\t]/g, " ");
     
     return encodeURIComponent(query);

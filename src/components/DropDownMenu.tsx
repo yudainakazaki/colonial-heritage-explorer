@@ -6,10 +6,12 @@ type Props = {
     items: string[],
     title: string,
     val: string,
+    disabled: boolean,
     emitVal: (val: string) => void,
+    emitOpen: (status: 'open' | 'closed') => void,
 }
 
-const DropDownMenu = ({items, title, val, emitVal}: Props) => {
+const DropDownMenu = ({items, title, val, disabled, emitVal, emitOpen}: Props) => {
 
     const [isOpen, setOpen] = useState(false);
     const [selectedValue, setSelectedValue] = useState(val);
@@ -31,6 +33,11 @@ const DropDownMenu = ({items, title, val, emitVal}: Props) => {
         setSelectedValue(val);
     }, [val])
 
+    useEffect(() => {
+        if(isOpen === true) emitOpen('open');
+        else emitOpen('closed');
+    }, [isOpen])
+
     const Label = () => {
         const label = items.length <= 0 ? 'No item to select' :
                     selectedValue === '' ? 'Select' : selectedValue;
@@ -41,7 +48,7 @@ const DropDownMenu = ({items, title, val, emitVal}: Props) => {
         <>
             <div className={`${style.title}`}>{ title }</div>
             <div className={`mt-1 mb-4 ${style.dropdown}`}>
-                <button onClick={handleOpen} className={`flex flex-row justify-between items-center ${style.dropdown__mainButton}`} disabled={ items.length === 0 } >
+                <button onClick={handleOpen} className={`flex flex-row justify-between items-center ${style.dropdown__mainButton}`} disabled={ disabled || items.length === 0 } >
                     <Label />
                     <span className={`bx mx-3 ${style.dropdown__mainButton__icon} ${isOpen ? 'bxs-up-arrow' : 'bxs-down-arrow'}`}/>
                 </button>

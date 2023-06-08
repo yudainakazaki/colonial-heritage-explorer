@@ -2,7 +2,7 @@ import { Map, ResultPane, SearchBar, FilterModal, DetailCard } from '@/component
 import IndexPage from '@/pages/IndexPage';
 import '@/styles/browse.scss';
 import React, { useState, useEffect } from 'react'
-import { CardAttributes, State, Filters, Bounds } from '@/Types';
+import { CardAttributes, State, Filters, Bounds, LatLng } from '@/Types';
 import { processData } from '@/utils/processData'
 import keywordsearch from '@/queries/keyword'
 import filterSearch from '@/queries/filter';
@@ -31,12 +31,22 @@ export default function Browse() {
 	const [isListLoading, setListLoading] = useState(false);
 	const [isDataLoading, setDataLoading] = useState(false);
 	const [selectedId, setSelectedId] = useState('');
+	const [selectedPoint, setSelectedPoint] = useState(undefined as LatLng | undefined)
 	const [list, setList] = useState([] as CardAttributes[])
 	const [data, setData] = useState({} as DetailAttributes)
 	const [center, setCenter] = useState({lat: 30, lng: 90} as {lat: number, lng: number})
 	const [filterOpen, setFilterOpen] = useState(false);
 	const [searchQueries, setSearchQueries] = useState(initState);
-	const [bounds, setBounds] = useState(undefined as Bounds);
+	const [bounds, setBounds] = useState({
+		_southWest: {
+			lat: -60,
+			lng: 0
+		},
+		_northEast: {
+			lat: 120,
+			lng: 180
+		}
+	} as Bounds);
 
 	const fetchList = async () => {
 		
@@ -44,20 +54,17 @@ export default function Browse() {
 		var res = {} as CardAttributes | any;
 
 		try {
-
             res = (await axios.get(`${process.env.API_URL}?query=${keywordsearch(keyword)}`, config)).data;
-            res = res.map((item: any) => {
-                return processData(item, 'card')
-            })
-
+            res = res.map((item: any) => processData(item, 'card'))
+			setState('result');
         } catch(e) {
             console.error(e);
-        }
-		
-		setListLoading(false);
-		setState('result');
-		setList(res);
-		setCenter(res[0]?.geoLocation || center);
+			setState('error')
+        } finally {
+			setListLoading(false);
+			setList(res);
+			setCenter(res.length > 0 && res[0].latlng !== undefined ? {lat: res[0].latlng?.lat, lng: res[0].latlng?.lng} : center);
+		}
 	}
 
 	const fetchObject = async () => {
@@ -65,16 +72,14 @@ export default function Browse() {
 		setDataLoading(true);
         var res = {} as DetailAttributes | any;
         try {
-			
             res = (await axios.get(`${process.env.API_URL}?query=${object(selectedId)}`, config)).data;
-            res = processData(await res[0], 'detail')
-                
+            res = processData(await res[0], 'detail')   
         } catch(e) {
             console.error(e);
-        }
-
-		setDataLoading(false);
-        setData(res);
+        } finally {
+			setDataLoading(false);
+        	setData(res);
+		}
     }
 
 	const fetchListByFilter = async () => {
@@ -88,38 +93,33 @@ export default function Browse() {
 			artform: searchQueries.artform || undefined,
 			location: searchQueries.location || undefined,
 			material: searchQueries.material || undefined,
-			coordinates: bounds || undefined
+			bounds: searchQueries.useLocation ? bounds : undefined,
 		}
 
 		try {
-
-			const q = filterSearch(query);
-			console.log(q);
-
+			const q = filterSearch(query, searchQueries.useLocation);
             res = (await axios.get(`${process.env.API_URL}?query=${q}`, config)).data;
-            res = res.map((item: any) => {
-                return processData(item, 'card')
-            })
-
+            res = res.map((item: any) => processData(item, 'card'))
+			setState('result');
         } catch(e) {
             console.error(e);
-        }
-		
-		setListLoading(false);
-		setState('result');
-		setList(res);
-		setCenter({lat: res[0]?.geoLocation[0], lng: res[0]?.geoLocation[1]} || center);
+			setState('error');
+			setListLoading(false);
+			return;
+        } finally {
+			setListLoading(false);
+			setList(res);
+			setCenter(res.length > 0 && res[0].latlng !== undefined ? {lat: res[0].latlng?.lat, lng: res[0].latlng?.lng} : center);
+		}
 	}
 
 	const getKeyword = (query: string) => {
 		setKeyword(query);
+		setState('search');
 	}
 
 	const clearSearch = () => {
 		setState('search');
-		setKeyword('');
-		setSelectedId('');
-		setList([]);
 	}
 
 	const handleId = (id: string) => {
@@ -127,7 +127,8 @@ export default function Browse() {
 	}
 
 	const handleCloseDetail = () => {
-		setSelectedId('')
+		setSelectedId('');
+		setState('result');
 	}
 
 	const handleFilter = () => {
@@ -139,8 +140,23 @@ export default function Browse() {
 	}
 
 	const getBoundary = (bounds: Bounds) => {
-		//setBounds(bounds);
+		setBounds(bounds);
 	}
+
+	const handleSelectedPoint = (latlng: LatLng) => {
+		setSelectedPoint(latlng !== undefined && latlng.lat !== undefined && latlng.lng !== undefined ? latlng : undefined);
+		setCenter(latlng !== undefined && latlng.lat !== undefined && latlng.lng !== undefined ? latlng : center);
+	}
+
+	useEffect(() => {
+		if (state === 'search'){
+			setKeyword('');
+			setSearchQueries(initState);
+			setSelectedId('');
+			setList([]);
+		}
+		if (state !== 'resultDetail') setSelectedPoint(undefined);
+	}, [state])
 
 	useEffect(() => {
 		if(filterOpen){
@@ -171,14 +187,15 @@ export default function Browse() {
 					isLoading={isListLoading || isDataLoading}
 					emitFilterClick={ handleFilter }
 				/>
-				{ !isListLoading && (state === 'result' || state === 'resultDetail') && 
-					<ResultPane data={list} emitId={handleId} /> }
-				{ !isDataLoading && selectedId !=='' && state === 'resultDetail' &&
+				{ !isListLoading && (state === 'result' || state === 'resultDetail' || state === 'error') && 
+					<ResultPane data={list} emitId={handleId} emitPoint={handleSelectedPoint} isError={ state === 'error' }/> }
+				{ !isDataLoading && selectedId !== '' && state === 'resultDetail' &&
 					<div className='detail-modal'>
 						<DetailCard data={data} emitClose={handleCloseDetail} />
 					</div> }
 				<Map 
 					data={list} 
+					selectedPoint={selectedPoint}
 					originalCenter={center} 
 					emitBounds={getBoundary} 
 				/>

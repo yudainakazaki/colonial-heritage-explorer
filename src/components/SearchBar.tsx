@@ -29,6 +29,10 @@ const SearchBar = ({emitSearch, clearSearch, emitFilterClick, isLoading, state}:
         setKeyword('');
     }
 
+    const clickEnter = (e: any) => {
+        if (e.key === 'Enter') handleClickSearch();
+    }
+
     return (
         <div className='search-bar flex'>
             <input 
@@ -37,6 +41,7 @@ const SearchBar = ({emitSearch, clearSearch, emitFilterClick, isLoading, state}:
                 className='search-bar__textarea'
                 value={keyword}
                 onChange={handleChange}
+                onKeyUp={clickEnter}
             />
             <button className='icon-btn' onClick={handleClickSearch}>
                 <i className='bx bx-search icon-main' />
@@ -47,12 +52,12 @@ const SearchBar = ({emitSearch, clearSearch, emitFilterClick, isLoading, state}:
                     <div className='icon-btn icon-hover'>
                         <BeatLoader size={8} speedMultiplier={0.6} color='grey'/> 
                     </div> : 
-                !isLoading && (state === 'result' || state === 'resultDetail') ? 
+                !isLoading && (state === 'result' || state === 'resultDetail' || state === 'error') ? 
                     <button className='icon-btn icon-hover' onClick={handleClickClear}>
                         <i className='bx bx-x grey' />
                     </button> : 
                 !isLoading && state === 'search' ? 
-                <button className='icon-btn' onClick={ emitFilterClick }>
+                <button className='icon-btn' onClick={emitFilterClick}>
                     <i className='bx bx-filter icon-blue' />
                 </button> : null
             }

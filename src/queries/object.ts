@@ -1,7 +1,7 @@
 export default function object(id: string){
     
-    const query = `
-        PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+    const query =
+        `PREFIX foaf: <http://xmlns.com/foaf/0.1/>
         PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
         PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
         PREFIX cidoc-crm: <http://www.cidoc-crm.org/cidoc-crm/>
@@ -12,47 +12,41 @@ export default function object(id: string){
         PREFIX dct: <http://purl.org/dc/terms/>
         select distinct *
         where {
-            ?object
-                sdo:identifier ?id;
-                dct:title ?title;
-                dct:creator ?creator;
-                sdo:locationCreated/sdo:name ?loc_created;
-                sdo:contentLocation/sdo:name ?loc_content;
-                foaf:depiction ?image;
-                sdo:artform ?artform;
-                sdo:provider ?provider;
-                sdo:locationCreated/skos:closeMatch ?geonames.
-                optional {
-                    ?object
-                        sdo:height/sdo:value ?height;
-                        sdo:depth/sdo:value ?depth;
-                        sdo:width/sdo:value ?width .
-                }
+            optional {?object sdo:identifier ?id;}
+            optional {?object dct:title ?title;}
+            optional {?object dct:creator ?creator;}
+            optional {?object sdo:locationCreated/sdo:name ?loc_created;}
+            optional {?object sdo:contentLocation/sdo:name ?loc_content;}
+            optional {?object foaf:depiction ?image;}
+            optional {?object sdo:artform ?artform;}
+            optional {?object sdo:provider ?provider;}
+            optional {
+                ?object sdo:locationCreated/skos:closeMatch ?geonames.
                 SERVICE <http://factforge.net/repositories/ff-news> {
                     ?geonames 
                         wgs84:lat ?lat;
-                        wgs84:long  ?long.
+                        wgs84:long  ?lng.
                 }
-                {
-                    select ?id (GROUP_CONCAT(DISTINCT ?keywords; SEPARATOR=", ") AS ?keywords_list)
-                    where {
-                        ?object sdo:identifier ?id;
-                                sdo:keywords ?keywords .
-                    }
-                    group by ?id
-                }
-                {
-                    select ?id (GROUP_CONCAT(DISTINCT ?material; SEPARATOR=", ") AS ?material_list)
-                    where {
-                        ?object sdo:identifier ?id;
-                                sdo:material ?material .
-                    }
-                    group by ?id
-                }
+            }
+            optional {
+                ?object
+                    sdo:height/sdo:value ?height;
+                    sdo:depth/sdo:value ?depth;
+                    sdo:width/sdo:value ?width .
+            }
+            {
+                select ?object (GROUP_CONCAT(DISTINCT ?keywords; SEPARATOR=", ") AS ?keywords_list)
+                where { ?object sdo:keywords ?keywords .}
+                group by ?object
+            }
+            {
+                select ?object (GROUP_CONCAT(DISTINCT ?material; SEPARATOR=", ") AS ?material_list)
+                where { ?object sdo:material ?material .}
+                group by ?object
+            }
             filter (?id = "${id}") .
         }
-        limit 1
-    `
+        limit 1`
     .replace(/[\r\n\t]/g, " ");
 
     return encodeURIComponent(query);
