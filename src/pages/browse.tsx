@@ -179,7 +179,7 @@ export default function Browse() {
     return (
 		<>
 			<IndexPage />
-			<main className="w-full h-full browse flex flex-row relative">
+			<main className="w-full h-full browse flex flex-col relative">
 				<SearchBar 
 					emitSearch={getKeyword} 
 					state={state} 
@@ -205,6 +205,7 @@ export default function Browse() {
 						emitSearch={ handleSearch } 
 					/>
 				}
+				<div className='browse__footer'>Powered by <a href="https://triply.cc/" target='_blank'>Triply</a></div>
 			</main>
 		</>
     )
