@@ -33,7 +33,7 @@ export default function DetailCard({data, emitClose}: Props) {
                     <IconLabel size='l' icon='cube' text={data.material} msg='Material of the object.'/>
                     { data.dimension?.height && data.dimension?.width && data.dimension?.depth && 
                         <IconLabel size='l' icon='ruler' text={processDimension(data.dimension).val} msg={processDimension(data.dimension).msg}/> }
-                    <IconLabel size='l' icon='key' text={data.keyword} msg='Keywords of the object.'/>
+                    <IconLabel size='l' icon='key' text={data.keyword} msg='Keywords related the object.'/>
                     {!data.latlng && 
                         <>
                             <hr className="my-2"/>

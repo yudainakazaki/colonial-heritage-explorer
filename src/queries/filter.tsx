@@ -5,11 +5,9 @@ export default function filterSearch(queries: SearchQueries, useLocation: boolea
     const hasFilter = !!queries.title || 
                         !!queries.artform ||
                         !!queries.location ||
-                        !!queries.material ||
-                        !!queries.bounds || 
-                        !!useLocation
-
-    console.log(queries.bounds);
+                        !!queries.material;
+    
+    const hasBounds = !!queries.bounds || !!useLocation;
     
     var query =
     `PREFIX foaf: <http://xmlns.com/foaf/0.1/>
@@ -30,8 +28,26 @@ export default function filterSearch(queries: SearchQueries, useLocation: boolea
         (GROUP_CONCAT(DISTINCT ?loc_content; SEPARATOR=", ") as ?loc_content) 
         (GROUP_CONCAT(DISTINCT ?loc_created; SEPARATOR=", ") as ?loc_created) 
         (sample(float:(?lat)) as ?lat) (sample(float:(?lng)) as ?lng)
-        where {
-            optional {?object sdo:identifier ?id.}
+        where {`;
+    
+    if (hasFilter){
+        var filter = ''.concat(
+            queries.title ?
+                `?object sdo:identifier ?id; sdo:title ?title0
+                filter (contains(?title0, "${queries.title}") || contains("${queries.title}", ?title0))` : '',
+            queries.material ? 
+                `?object sdo:identifier ?id; sdo:material ?material0
+                filter (contains(?material0, "${queries.material}"))` : '',
+            queries.artform ? 
+                `?object sdo:identifier ?id; sdo:artform ?artform0
+                filter (?artform0 = "${queries.artform}")` : '',
+            queries.location ? 
+                `?object sdo:identifier ?id; sdo:locationCreated/sdo:name ?loc_created0.
+                filter(contains(lcase(str(?loc_created0)), lcase(str("Batavia"))))` : '')
+        query += filter
+    }
+    
+    query += `optional {?object sdo:identifier ?id.}
             optional {?object dct:title ?title.}
             optional {?object dct:creator ?creator.}
             optional {?object foaf:depiction ?image.}
@@ -50,19 +66,13 @@ export default function filterSearch(queries: SearchQueries, useLocation: boolea
             } } group by ?id ?object ?title ?creator ?image ?artform ?geonames } `;
 
     console.log('hasFilter: ' + hasFilter);
-    if(hasFilter){
+    if(hasBounds){
         var filter = 'filter ('.concat(
-            queries.title ? `(contains(?title, "${queries.title}") || contains("${queries.title}", ?title)) && ` : '',
-            queries.material ? `contains(?materials, "${queries.material}") && ` : '',
-            queries.artform ? `?artform = "${queries.artform}" && ` : '',
-            queries.location ? `contains(lcase(str(?loc_created)), lcase(str("${queries.location}"))) && ` : '',
             useLocation && queries.bounds ? `
-                datatype(?lat) in (xsd:string, xsd:float) &&
-                datatype(?lng) in (xsd:string, xsd:float) &&
-                ?lat > ${queries.bounds?._southWest?.lat} && 
-                ?lat < ${queries.bounds?._northEast?.lat} &&
-                ?lng > ${queries.bounds?._southWest?.lng} && 
-                ?lng < ${queries.bounds?._northEast?.lng}
+                xsd:float(?lat) > ${queries.bounds?._southWest?.lat} && 
+                xsd:float(?lat) < ${queries.bounds?._northEast?.lat} &&
+                xsd:float(?lng) > ${queries.bounds?._southWest?.lng} && 
+                xsd:float(?lng) < ${queries.bounds?._northEast?.lng}
             ` : ''
         );
         
@@ -70,7 +80,7 @@ export default function filterSearch(queries: SearchQueries, useLocation: boolea
                     
         query = query.concat(filter, ') . ');
     }
-    query = query.concat('} limit 50');
+    query = query.concat('} limit 100');
     //query = query.concat('} group by ?id ?object ?title ?creator ?image ?artform ?geonames ');
 
     console.log(query);
