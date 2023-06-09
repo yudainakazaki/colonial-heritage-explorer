@@ -63,7 +63,7 @@ export default function filterSearch(queries: SearchQueries, useLocation: boolea
                         wgs84:lat ?lat ;
                         wgs84:long ?lng .
                 }
-            } } group by ?id ?object ?title ?creator ?image ?artform ?geonames } `;
+            } } group by ?id ?object ?title ?creator ?image ?artform } `;
 
     console.log('hasFilter: ' + hasFilter);
     if(hasBounds){
