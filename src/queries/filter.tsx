@@ -43,7 +43,7 @@ export default function filterSearch(queries: SearchQueries, useLocation: boolea
                 filter (?artform0 = "${queries.artform}")` : '',
             queries.location ? 
                 `?object sdo:identifier ?id; sdo:locationCreated/sdo:name ?loc_created0.
-                filter(contains(lcase(str(?loc_created0)), lcase(str("Batavia"))))` : '')
+                filter(contains(lcase(str("${queries.location}")), lcase(str("${queries.location}"))))` : '')
         query += filter
     }
     
