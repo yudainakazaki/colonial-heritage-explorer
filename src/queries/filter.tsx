@@ -2,8 +2,11 @@ import { SearchQueries } from "@/Types";
 
 export default function filterSearch(queries: SearchQueries, useLocation: boolean) {
 
-    const hasFilter = !!queries.title || !!queries.artform || !!queries.location || 
-                        !!queries.material || !!queries.bounds || !!useLocation;
+    const hasFilter = !!queries.artform || !!queries.location || 
+                        !!queries.material || !!useLocation;
+    
+    const hasBounds = !!queries.bounds 
+    const hasTitle = !!queries.title
     
     var query =
     `PREFIX foaf: <http://xmlns.com/foaf/0.1/>
@@ -58,7 +61,7 @@ export default function filterSearch(queries: SearchQueries, useLocation: boolea
                 }
             } } group by ?id ?object ?title ?creator ?image ?artform } `;
 
-    if(hasFilter){
+    if(hasBounds || hasTitle){
         var filter = 'filter ('.concat(
             queries.title ?
                 `(contains(?title, "${queries.title}") || contains("${queries.title}", ?title)) && ` : '',
