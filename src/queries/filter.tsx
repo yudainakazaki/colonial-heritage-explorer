@@ -70,7 +70,7 @@ export default function filterSearch(queries: SearchQueries, useLocation: boolea
                     
         query = query.concat(filter, ') . ');
     }
-    query = query.concat('} ');
+    query = query.concat('} limit 50');
     //query = query.concat('} group by ?id ?object ?title ?creator ?image ?artform ?geonames ');
 
     console.log(query);

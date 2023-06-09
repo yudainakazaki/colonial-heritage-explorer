@@ -2,11 +2,10 @@ import React, { useState, useEffect } from 'react';
 import 'leaflet/dist/leaflet.css'
 import { MapContainer, TileLayer, Marker, Popup, ZoomControl, useMap, useMapEvents } from 'react-leaflet'
 import '@/styles/map.scss'
-//import 'leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css'; // Re-uses images from ~leaflet package
-//import 'leaflet-defaulticon-compatibility'
 import { CardAttributes, Bounds } from '@/Types';
 import { useRef } from 'react';
 import markerIcon from './markerIcon';
+import L from 'leaflet'
 
 type Props = {
     data: CardAttributes[],
@@ -15,9 +14,9 @@ type Props = {
     emitBounds: (bounds: Bounds) => void,
 }
 
-const southWest = [-270, 270];
-const northEast = [270, -270];
-const maxBounds = [southWest, northEast];
+const southWest = {lat: -270, lng: 270};
+const northEast = {lat: 270, lng: -270};
+const maxBounds = L.latLngBounds(southWest, northEast);
 
 const processCenter = (coor : {lat: number, lng: number}) : {lat: number, lng: number} => {
     return {lat: coor.lat, lng: (coor.lng - 20)};
@@ -69,6 +68,7 @@ const Map = ({ data, selectedPoint, originalCenter, emitBounds }: Props) => {
             center={center}
             zoom={3} 
             zoomControl={false}
+            maxBounds={maxBounds}
         >
             <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
