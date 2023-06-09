@@ -22,12 +22,12 @@ export default function filterSearch(queries: SearchQueries, useLocation: boolea
     PREFIX float: <http://www.w3.org/2001/XMLSchema#float>
     PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
     select * { {
-        select distinct ?id ?title ?creator ?image ?artform ?geonames 
+        select distinct ?id ?title ?creator ?image ?artform
         (GROUP_CONCAT(DISTINCT ?keywords; SEPARATOR=", ") as ?keywords) 
         (GROUP_CONCAT(DISTINCT ?material; SEPARATOR=", ") as ?materials) 
         (GROUP_CONCAT(DISTINCT ?loc_content; SEPARATOR=", ") as ?loc_content) 
         (GROUP_CONCAT(DISTINCT ?loc_created; SEPARATOR=", ") as ?loc_created) 
-        (sample(float:(?lat)) as ?lat) (sample(float:(?lng)) as ?lng)
+        (sample(float:(?lat)) as ?lat) (sample(float:(?lng)) as ?lng) (sample(float:(?geonames)) as ?geonames)
         where {`;
     
     if (hasFilter){
