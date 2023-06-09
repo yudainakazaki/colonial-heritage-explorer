@@ -10,14 +10,16 @@
 
     &__img {
         border-radius: $radius $radius 0 0;
-        overflow: hidden;
         height: calc($len-9 * 4);
         width: calc($len-10 * 4 + $len-2);
         display: flex;
         justify-content: center;
         align-items: center;
         overflow-y: auto;
-        overflow-x: auto;
+
+        &::-webkit-scrollbar{
+            display: none;
+        }
 
         &__body {
             height: auto;

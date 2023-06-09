@@ -2,8 +2,8 @@ import { SearchQueries } from "@/Types";
 
 export default function filterSearch(queries: SearchQueries, useLocation: boolean) {
 
-    const hasFilter = !!queries.title || !!queries.artform || !!queries.location || !!queries.material;
-    const hasBounds = !!queries.bounds || !!useLocation;
+    const hasFilter = !!queries.title || !!queries.artform || !!queries.location || 
+                        !!queries.material || !!queries.bounds || !!useLocation;
     
     var query =
     `PREFIX foaf: <http://xmlns.com/foaf/0.1/>
@@ -28,9 +28,6 @@ export default function filterSearch(queries: SearchQueries, useLocation: boolea
     
     if (hasFilter){
         var filter = ''.concat(
-            queries.title ?
-                `?object sdo:identifier ?id; sdo:title ?title0
-                filter (contains(?title0, "${queries.title}") || contains("${queries.title}", ?title0))` : '',
             queries.material ? 
                 `?object sdo:identifier ?id; sdo:material ?material0
                 filter (contains(?material0, "${queries.material}"))` : '',
@@ -61,8 +58,10 @@ export default function filterSearch(queries: SearchQueries, useLocation: boolea
                 }
             } } group by ?id ?object ?title ?creator ?image ?artform } `;
 
-    if(hasBounds){
+    if(hasFilter){
         var filter = 'filter ('.concat(
+            queries.title ?
+                `(contains(?title, "${queries.title}") || contains("${queries.title}", ?title)) && ` : '',
             useLocation && queries.bounds ? `
                 xsd:float(?lat) > ${queries.bounds?._southWest?.lat} && 
                 xsd:float(?lat) < ${queries.bounds?._northEast?.lat} &&
@@ -77,6 +76,7 @@ export default function filterSearch(queries: SearchQueries, useLocation: boolea
     }
 
     query = query.concat('} limit 100');
+    console.log(query);
     query = query.replace(/[\r\n\t]/g, " ");
     
     return encodeURIComponent(query);
