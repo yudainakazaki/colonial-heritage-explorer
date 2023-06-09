@@ -11,13 +11,12 @@ export default function object(id: string){
         PREFIX wgs84: <http://www.w3.org/2003/01/geo/wgs84_pos#>
         PREFIX dct: <http://purl.org/dc/terms/>
         PREFIX float: <http://www.w3.org/2001/XMLSchema#float>
-        select * { {
-            select distinct ?id ?title ?creator ?image ?artform
-            (GROUP_CONCAT(DISTINCT ?keywords; SEPARATOR=", ") as ?keywords) 
-            (GROUP_CONCAT(DISTINCT ?material; SEPARATOR=", ") as ?materials) 
-            (GROUP_CONCAT(DISTINCT ?loc_content; SEPARATOR=", ") as ?loc_content) 
-            (GROUP_CONCAT(DISTINCT ?loc_created; SEPARATOR=", ") as ?loc_created) 
-            (sample(float:(?lat)) as ?lat) (sample(float:(?lng)) as ?lng) (sample(float:(?geonames)) as ?geonames)
+        select distinct ?id ?title ?creator ?image ?artform
+        (GROUP_CONCAT(DISTINCT ?keywords; SEPARATOR=", ") as ?keywords) 
+        (GROUP_CONCAT(DISTINCT ?material; SEPARATOR=", ") as ?materials) 
+        (GROUP_CONCAT(DISTINCT ?loc_content; SEPARATOR=", ") as ?loc_content) 
+        (GROUP_CONCAT(DISTINCT ?loc_created; SEPARATOR=", ") as ?loc_created) 
+        (sample(float:(?lat)) as ?lat) (sample(float:(?lng)) as ?lng) (sample(float:(?geonames)) as ?geonames)
         where {
             ?object sdo:identifier ?id . filter (?id = "${id}")
             optional {?object sdo:identifier ?id;}
@@ -27,6 +26,8 @@ export default function object(id: string){
             optional {?object sdo:contentLocation/sdo:name ?loc_content;}
             optional {?object foaf:depiction ?image;}
             optional {?object sdo:artform ?artform;}
+            optional {?object sdo:keywords ?keywords;}
+	        optional {?object sdo:material ?material;}
             optional {?object sdo:provider ?provider;}
             optional {
                 ?object sdo:locationCreated/skos:closeMatch ?geonames.
@@ -42,7 +43,8 @@ export default function object(id: string){
                     sdo:depth/sdo:value ?depth;
                     sdo:width/sdo:value ?width .
             }
-        } group by ?id ?object ?title ?creator ?image ?artform } } limit 1`
+        } group by ?id ?object ?title ?creator ?image ?artform
+        limit 1`
 
     console.log(query);
 
