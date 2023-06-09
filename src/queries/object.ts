@@ -1,6 +1,6 @@
 export default function object(id: string){
     
-    const query =
+    var query =
         `PREFIX foaf: <http://xmlns.com/foaf/0.1/>
         PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
         PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -10,8 +10,16 @@ export default function object(id: string){
         PREFIX sdo: <https://schema.org/>
         PREFIX wgs84: <http://www.w3.org/2003/01/geo/wgs84_pos#>
         PREFIX dct: <http://purl.org/dc/terms/>
-        select distinct *
+        PREFIX float: <http://www.w3.org/2001/XMLSchema#float>
+        select * { {
+            select distinct ?id ?title ?creator ?image ?artform
+            (GROUP_CONCAT(DISTINCT ?keywords; SEPARATOR=", ") as ?keywords) 
+            (GROUP_CONCAT(DISTINCT ?material; SEPARATOR=", ") as ?materials) 
+            (GROUP_CONCAT(DISTINCT ?loc_content; SEPARATOR=", ") as ?loc_content) 
+            (GROUP_CONCAT(DISTINCT ?loc_created; SEPARATOR=", ") as ?loc_created) 
+            (sample(float:(?lat)) as ?lat) (sample(float:(?lng)) as ?lng) (sample(float:(?geonames)) as ?geonames)
         where {
+            ?object sdo:identifier ?id . filter (?id = "${id}")
             optional {?object sdo:identifier ?id;}
             optional {?object dct:title ?title;}
             optional {?object dct:creator ?creator;}
@@ -44,10 +52,12 @@ export default function object(id: string){
                 where { ?object sdo:material ?material .}
                 group by ?object
             }
-            filter (?id = "${id}") .
-        }
-        limit 1`
-    .replace(/[\r\n\t]/g, " ");
+            
+        } group by ?id ?object ?title ?creator ?image ?artform } } limit 1`
+
+    console.log(query);
+
+    query = query.replace(/[\r\n\t]/g, " ");
 
     return encodeURIComponent(query);
 }
