@@ -2,11 +2,7 @@ import { SearchQueries } from "@/Types";
 
 export default function filterSearch(queries: SearchQueries, useLocation: boolean) {
 
-    const hasFilter = !!queries.title || 
-                        !!queries.artform ||
-                        !!queries.location ||
-                        !!queries.material;
-    
+    const hasFilter = !!queries.title || !!queries.artform || !!queries.location || !!queries.material;
     const hasBounds = !!queries.bounds || !!useLocation;
     
     var query =
@@ -65,7 +61,6 @@ export default function filterSearch(queries: SearchQueries, useLocation: boolea
                 }
             } } group by ?id ?object ?title ?creator ?image ?artform } `;
 
-    console.log('hasFilter: ' + hasFilter);
     if(hasBounds){
         var filter = 'filter ('.concat(
             useLocation && queries.bounds ? `
@@ -80,10 +75,8 @@ export default function filterSearch(queries: SearchQueries, useLocation: boolea
                     
         query = query.concat(filter, ') . ');
     }
-    query = query.concat('} limit 100');
-    //query = query.concat('} group by ?id ?object ?title ?creator ?image ?artform ?geonames ');
 
-    console.log(query);
+    query = query.concat('} limit 100');
     query = query.replace(/[\r\n\t]/g, " ");
     
     return encodeURIComponent(query);

@@ -31,7 +31,7 @@ export default function DetailCard({data, emitClose}: Props) {
                     {!!data.locationContent && <IconLabel size='l' icon='edit-location' text={data.locationContent} msg='Location which the object depicts.' />}
                     {!!data.artform && <IconLabel size='l' icon='palette' text={data.artform} msg='Artform of the object.'/>}
                     {!!data.material && <IconLabel size='l' icon='cube' text={data.material} msg='Material of the object.'/>}
-                    { data.dimension?.height && data.dimension?.width && data.dimension?.depth && 
+                    {(!!data.dimension?.height || !!data.dimension?.width || !!data.dimension?.depth) && 
                         <IconLabel size='l' icon='ruler' text={processDimension(data.dimension).val} msg={processDimension(data.dimension).msg}/> }
                     {!!data.keyword && <IconLabel size='l' icon='key' text={data.keyword} msg='Keywords related the object.'/>}
                     {!data.latlng && 

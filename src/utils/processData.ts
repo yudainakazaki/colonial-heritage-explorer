@@ -13,9 +13,9 @@ export const processData = (data: any, type: DataType) => {
             artform: data?.artform || undefined,
             creator: data?.creator || undefined,
             dimension: {
-                height: data?.height,
-                width: data?.width,
-                depth: data?.depth,
+                height: data?.height || undefined,
+                width: data?.width || undefined,
+                depth: data?.depth || undefined,
             },
             material: data?.materials || undefined,
             keyword: data?.keywords || undefined,
@@ -40,7 +40,7 @@ export const processData = (data: any, type: DataType) => {
 }
 
 export const processDimension = (d: Dimension) => {
-    const val = `${d?.height || '--'}cm x ${d?.width || '--'}cm x ${d?.depth || '--'}cm`;
+    const val = `${d?.height || ' - '}cm x ${d?.width || ' - '}cm x ${d?.depth || ' - '}cm`;
     const msg = 'height x width x depth';
 
     return {val, msg}

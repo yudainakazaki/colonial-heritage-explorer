@@ -44,7 +44,7 @@ export default function keywordsearch(keyword: string) {
           ) .
     } 
     group by ?id ?object ?title ?creator ?image ?artform limit 50`
-    console.log(query);
+    
     query = query.replace(/[\r\n\t]/g, " ");
 
     return encodeURIComponent(query);

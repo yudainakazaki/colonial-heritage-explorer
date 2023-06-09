@@ -28,7 +28,6 @@ const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJ1bmtub3duIiwiaXNz
 const query = encodeURIComponent(ep)
 
 const callAPI = async () => {
-    console.log(query);
     try {
         const res = await fetch(`${url}?query=${query}`, {
             method: "GET",
@@ -37,7 +36,6 @@ const callAPI = async () => {
             }
         });
         const data = await res.json();
-        console.log(data);
     } catch (err) {
         console.log(err);
     }
