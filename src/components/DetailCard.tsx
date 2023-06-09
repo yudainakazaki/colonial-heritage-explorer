@@ -26,14 +26,14 @@ export default function DetailCard({data, emitClose}: Props) {
                             <span className={`bx bx-link-external text-xl w-5 h-5 icon ${style.icon}`} />
                         </a>
                     </div>
-                    <IconLabel size='l' icon='user' text={data.creator} msg='Creator of the object.'/>
-                    <IconLabel size='l' icon='map' text={data.locationCreated} msg='Location where the object was originally created.' />
-                    <IconLabel size='l' icon='edit-location' text={data.locationContent || 'Not available'} msg='Location which the object depicts.' />
-                    <IconLabel size='l' icon='palette' text={data.artform} msg='Artform of the object.'/>
-                    <IconLabel size='l' icon='cube' text={data.material} msg='Material of the object.'/>
+                    {!!data.creator && <IconLabel size='l' icon='user' text={data.creator} msg='Creator of the object.'/>}
+                    {!!data.locationCreated && <IconLabel size='l' icon='map' text={data.locationCreated} msg='Location where the object was originally created.' />}
+                    {!!data.locationContent && <IconLabel size='l' icon='edit-location' text={data.locationContent} msg='Location which the object depicts.' />}
+                    {!!data.artform && <IconLabel size='l' icon='palette' text={data.artform} msg='Artform of the object.'/>}
+                    {!!data.material && <IconLabel size='l' icon='cube' text={data.material} msg='Material of the object.'/>}
                     { data.dimension?.height && data.dimension?.width && data.dimension?.depth && 
                         <IconLabel size='l' icon='ruler' text={processDimension(data.dimension).val} msg={processDimension(data.dimension).msg}/> }
-                    <IconLabel size='l' icon='key' text={data.keyword} msg='Keywords related the object.'/>
+                    {!!data.keyword && <IconLabel size='l' icon='key' text={data.keyword} msg='Keywords related the object.'/>}
                     {!data.latlng && 
                         <>
                             <hr className="my-2"/>

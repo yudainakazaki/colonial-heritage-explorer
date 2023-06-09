@@ -42,17 +42,6 @@ export default function object(id: string){
                     sdo:depth/sdo:value ?depth;
                     sdo:width/sdo:value ?width .
             }
-            {
-                select ?object (GROUP_CONCAT(DISTINCT ?keywords; SEPARATOR=", ") AS ?keywords_list)
-                where { ?object sdo:keywords ?keywords .}
-                group by ?object
-            }
-            {
-                select ?object (GROUP_CONCAT(DISTINCT ?material; SEPARATOR=", ") AS ?material_list)
-                where { ?object sdo:material ?material .}
-                group by ?object
-            }
-            
         } group by ?id ?object ?title ?creator ?image ?artform } } limit 1`
 
     console.log(query);

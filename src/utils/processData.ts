@@ -6,21 +6,21 @@ export const processData = (data: any, type: DataType) => {
 
     if (type === 'detail')
         return {
-            id: data?.id || 'Not available',
-            title: data?.title || 'Not available',
-            locationCreated: data?.loc_created || 'Not available',
-            locationContent: data?.loc_content || 'Not available',
-            artform: data?.artform || 'Not available',
-            creator: data?.creator || 'Not available',
+            id: data?.id || undefined,
+            title: data?.title || undefined,
+            locationCreated: data?.loc_created || undefined,
+            locationContent: data?.loc_content || undefined,
+            artform: data?.artform || undefined,
+            creator: data?.creator || undefined,
             dimension: {
                 height: data?.height,
                 width: data?.width,
                 depth: data?.depth,
             },
-            material: data?.material_list || 'Not available',
-            keyword: data?.keywords_list || 'Not available',
-            provider: data?.provider || 'Not available',
-            url: data?.object || 'Not available',
+            material: data?.material_list || undefined,
+            keyword: data?.keywords_list || undefined,
+            provider: data?.provider || undefined,
+            url: data?.object || undefined,
             image: data?.image || undefined,
             latlng: data?.lat !== null && data?.lng !== null ? {lat: parseFloat(data?.lat), lng: parseFloat(data?.lng)} : undefined,
         } as DetailAttributes;
