@@ -145,7 +145,7 @@ const FilterModal = ({emitClose, emitSearch}: Props) => {
                 <DropDownMenu title='Material' items={materials} val={filter.material} emitVal={(e) => handleSetVal(e, 2)} emitOpen={(status) => handleDropDown(status, 'mat')} disabled={disableDropDown.mat} />
                 <div className={`flex justify-between mt-6 mb-4 ${style.modal__checkbox}`}>
                     <span className='flex items-center'>
-                        Search in the seleceted area
+                        Search in the selected area
                         <Info msg='The map of the area shown in your screen is the range of the search.' />
                     </span>
                     <input 

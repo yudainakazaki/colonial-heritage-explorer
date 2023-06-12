@@ -5,7 +5,7 @@ export function artformsQuery() {
         select distinct ?artform {
           ?object sdo:artform ?artform;
         }
-        order by asc(?artform)`
+        order by asc(lcase(?artform))`
         .replace(/[\r\n\t]/g, " ");
     return encodeURIComponent(query);
 }
@@ -30,7 +30,7 @@ export function materialsQuery() {
 			?object
 			sdo:material ?material;
 		}
-		order by asc(?material)`
+		order by asc(lcase(?material))`
 		.replace(/[\r\n\t]/g, " ");
     return encodeURIComponent(query);
 }
