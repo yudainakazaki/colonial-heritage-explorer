@@ -18,8 +18,8 @@ const southWest = {lat: -90, lng: 240};
 const northEast = {lat: 90, lng: -240};
 const maxBounds = L.latLngBounds(southWest, northEast);
 
-const processCenter = (coor : {lat: number, lng: number}) : {lat: number, lng: number} => {
-    return {lat: coor.lat, lng: coor.lng - 15};
+const processCenter = (coor : {lat: number, lng: number}, window: number) : {lat: number, lng: number} => {
+    return {lat: coor.lat, lng: coor.lng - ((window-368)/8)};
 }
 
 const SetView = ({ animateRef, center }: any) => {
@@ -51,6 +51,7 @@ const GetBoundary = ({ emitBounds, emitCenter }: any) => {
 const Map = ({ data, selectedPoint, originalCenter, emitBounds }: Props) => {	
 
     const animateRef = useRef(false);
+    const windowWidth = window.innerHeight;
 
     const getBounds = (bounds: Bounds) => {
         emitBounds(bounds);
@@ -59,7 +60,7 @@ const Map = ({ data, selectedPoint, originalCenter, emitBounds }: Props) => {
     const [center, setCenter] = useState(originalCenter);
 
     useEffect(() => {
-        setCenter(processCenter(originalCenter));
+        setCenter(processCenter(originalCenter, windowWidth));
     }, [originalCenter]);
 
     return (
