@@ -19,7 +19,7 @@ const northEast = {lat: 90, lng: -240};
 const maxBounds = L.latLngBounds(southWest, northEast);
 
 const processCenter = (coor : {lat: number, lng: number}) : {lat: number, lng: number} => {
-    return {lat: coor.lat, lng: coor.lng};
+    return {lat: coor.lat, lng: coor.lng - 15};
 }
 
 const SetView = ({ animateRef, center }: any) => {
