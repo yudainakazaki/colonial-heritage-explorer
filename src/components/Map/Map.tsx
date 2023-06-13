@@ -14,8 +14,8 @@ type Props = {
     emitBounds: (bounds: Bounds) => void,
 }
 
-const southWest = {lat: -270, lng: 270};
-const northEast = {lat: 270, lng: -270};
+const southWest = {lat: -90, lng: 240};
+const northEast = {lat: 90, lng: -240};
 const maxBounds = L.latLngBounds(southWest, northEast);
 
 const processCenter = (coor : {lat: number, lng: number}) : {lat: number, lng: number} => {
@@ -69,6 +69,7 @@ const Map = ({ data, selectedPoint, originalCenter, emitBounds }: Props) => {
             zoom={3} 
             zoomControl={false}
             maxBounds={maxBounds}
+            maxZoom={10}
         >
             <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
