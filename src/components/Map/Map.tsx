@@ -18,8 +18,12 @@ const southWest = {lat: -90, lng: 240};
 const northEast = {lat: 90, lng: -240};
 const maxBounds = L.latLngBounds(southWest, northEast);
 
-const processCenter = (coor : {lat: number, lng: number}, window: number) : {lat: number, lng: number} => {
-    return {lat: coor.lat, lng: coor.lng - ((window-368)/8)};
+const processCenter = (coor : {lat: number, lng: number}, window: number, zoom: number) : {lat: number, lng: number} => {
+    const diff = window > 1300 ? 90 * 3/(zoom*zoom) :
+                zoom < 5 ? 180 * 3/(zoom*zoom) :
+                zoom < 7 ? 30 * 2/zoom : (12/zoom) * 1/zoom*zoom
+                    
+    return {lat: coor.lat, lng: coor.lng - diff};
 }
 
 const SetView = ({ animateRef, center }: any) => {
@@ -48,19 +52,32 @@ const GetBoundary = ({ emitBounds, emitCenter }: any) => {
     return null;
 }
 
+const GetZoom = ({ emitZoom }: any) => {
+    const map = useMap();
+    useMapEvents({
+        zoomend: () => emitZoom(map.getZoom())
+    })
+    return null;
+}
+
 const Map = ({ data, selectedPoint, originalCenter, emitBounds }: Props) => {	
 
     const animateRef = useRef(false);
-    const windowWidth = window.innerHeight;
+    const windowWidth = window.innerWidth;
+    const [zoom, setZoom] = useState(3);
 
     const getBounds = (bounds: Bounds) => {
         emitBounds(bounds);
     }
 
+    const getZoom = (curZoom: number) => {
+        setZoom(curZoom);
+    }
+
     const [center, setCenter] = useState(originalCenter);
 
     useEffect(() => {
-        setCenter(processCenter(originalCenter, windowWidth));
+        setCenter(processCenter(originalCenter, windowWidth, zoom));
     }, [originalCenter]);
 
     return (
@@ -77,6 +94,7 @@ const Map = ({ data, selectedPoint, originalCenter, emitBounds }: Props) => {
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
             <GetBoundary emitBounds={getBounds} emitCenter={(val: any) => {setCenter(val)}}/>
+            <GetZoom emitZoom={getZoom}/>
             <SetView animateRef={animateRef} center={center}/> 
             <ZoomControl position="bottomright" />
             {
