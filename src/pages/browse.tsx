@@ -34,7 +34,7 @@ export default function Browse() {
 	const [selectedPoint, setSelectedPoint] = useState(undefined as LatLng | undefined)
 	const [list, setList] = useState([] as CardAttributes[])
 	const [data, setData] = useState({} as DetailAttributes)
-	const [center, setCenter] = useState({lat: 30, lng: 90} as {lat: number, lng: number})
+	const [center, setCenter] = useState({lat: 30, lng: 15} as {lat: number, lng: number})
 	const [filterOpen, setFilterOpen] = useState(false);
 	const [searchQueries, setSearchQueries] = useState(initState);
 	const [bounds, setBounds] = useState({
