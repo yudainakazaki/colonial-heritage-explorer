@@ -40,11 +40,13 @@ export default function keywordsearch(keyword: string) {
             contains(lcase(?creator), lcase("${keyword}")) || contains(lcase("${keyword}"), lcase(?creator)) || 
             contains(lcase(?artform), lcase("${keyword}")) || contains(lcase("${keyword}"), lcase(?artform)) || 
             contains(lcase(?loc_created), lcase("${keyword}")) || contains(lcase("${keyword}"), lcase(?loc_created)) ||
-            contains(lcase(?materials), lcase("${keyword}")) || contains(lcase("${keyword}"), lcase(?materials)) ||
+            contains(lcase(?material), lcase("${keyword}")) ||
             contains(lcase(?keywords), lcase("${keyword}"))
           ) .
     } 
     group by ?id ?object ?title ?creator ?image ?artform limit 50`
+
+    console.log(query);
     
     query = query.replace(/[\r\n\t]/g, " ");
 
