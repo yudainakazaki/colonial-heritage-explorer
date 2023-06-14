@@ -22,7 +22,7 @@ const processCenter = (coor : {lat: number, lng: number}, window: number, zoom: 
     const diff = window > 1300 ? 90 * 3/(zoom*zoom) :
                 zoom < 5 ? 180 * 3/(zoom*zoom) :
                 zoom < 7 ? 30 * 2/zoom : (12/zoom) * 1/zoom*zoom
-                    
+
     return {lat: coor.lat, lng: coor.lng - diff};
 }
 
@@ -88,6 +88,7 @@ const Map = ({ data, selectedPoint, originalCenter, emitBounds }: Props) => {
             zoomControl={false}
             maxBounds={maxBounds}
             maxZoom={10}
+            zoomSnap={0.25}
         >
             <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
