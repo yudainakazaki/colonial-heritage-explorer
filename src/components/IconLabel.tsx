@@ -7,6 +7,7 @@ type IconLabelProps = {
     size: Size,
     icon: string,
     text: string,
+    showLink?: boolean,
     msg: string
 }
 
@@ -39,7 +40,7 @@ export default function IconLabel(props: IconLabelProps) {
                 onMouseLeave={onLeave}
             >
                 <span className={ `bx bxs-${icon} ${sizeIcon} mr-2` } style={{ color: '#438FC1' }}/>
-                <span className={ sizeFont } style={ textColor }>{ text }</span>
+                <span className={ sizeFont } style={ textColor }>{ props.showLink ? (<a href={text} target="_blank" className="underline-offset-4">{text.split('/').slice(-1)}</a>) : text }</span>
             </div>
             {hover && <div className={`${style.msg} absolute`}>{ msg }</div>}
         </div>

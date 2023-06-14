@@ -11,7 +11,7 @@ export default function object(id: string){
         PREFIX wgs84: <http://www.w3.org/2003/01/geo/wgs84_pos#>
         PREFIX dct: <http://purl.org/dc/terms/>
         PREFIX float: <http://www.w3.org/2001/XMLSchema#float>
-        select distinct ?id ?object ?title ?creator ?image ?artform
+        select distinct ?id ?object ?title ?creator ?image ?artform ?provider
         (GROUP_CONCAT(DISTINCT ?keywords; SEPARATOR=", ") as ?keywords) 
         (GROUP_CONCAT(DISTINCT ?material; SEPARATOR=", ") as ?materials) 
         (GROUP_CONCAT(DISTINCT ?loc_content; SEPARATOR=", ") as ?loc_content) 
@@ -44,7 +44,7 @@ export default function object(id: string){
                     sdo:depth/sdo:value ?depth;
                     sdo:width/sdo:value ?width .
             }
-        } group by ?id ?object ?title ?creator ?image ?artform limit 1`.replace(/[\r\n\t]/g, " ");
+        } group by ?id ?object ?title ?creator ?image ?artform ?provider limit 1`.replace(/[\r\n\t]/g, " ");
 
     return encodeURIComponent(query);
 }

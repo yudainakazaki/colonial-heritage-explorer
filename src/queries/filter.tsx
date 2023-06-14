@@ -7,32 +7,31 @@ export default function filterSearch(queries: SearchQueries, useLocation: boolea
     
     const hasBounds = !!queries.bounds;
     
-    var query =
-    `PREFIX foaf: <http://xmlns.com/foaf/0.1/>
-        PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-        PREFIX cidoc-crm: <http://www.cidoc-crm.org/cidoc-crm/>
-        PREFIX schema: <https://schema.org/>
-        PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
-        PREFIX sdo: <https://schema.org/>
-        PREFIX wgs84: <http://www.w3.org/2003/01/geo/wgs84_pos#>
-        PREFIX dct: <http://purl.org/dc/terms/>
-        PREFIX float: <http://www.w3.org/2001/XMLSchema#float>
-        PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-        select * { {
-            select distinct ?id ?title ?creator ?image ?artform
-            (GROUP_CONCAT(DISTINCT ?keywords; SEPARATOR=", ") as ?keywords) 
-            (GROUP_CONCAT(DISTINCT ?material; SEPARATOR=", ") as ?materials) 
-            (GROUP_CONCAT(DISTINCT ?loc_content; SEPARATOR=", ") as ?loc_content) 
-            (GROUP_CONCAT(DISTINCT ?loc_created; SEPARATOR=", ") as ?loc_created) 
-            (sample(float:(?lat)) as ?lat) (sample(float:(?lng)) as ?lng) (sample(float:(?geonames)) as ?geonames)
-            where {`;
-    
+    var query = `PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+                    PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+                    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+                    PREFIX cidoc-crm: <http://www.cidoc-crm.org/cidoc-crm/>
+                    PREFIX schema: <https://schema.org/>
+                    PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+                    PREFIX sdo: <https://schema.org/>
+                    PREFIX wgs84: <http://www.w3.org/2003/01/geo/wgs84_pos#>
+                    PREFIX dct: <http://purl.org/dc/terms/>
+                    PREFIX float: <http://www.w3.org/2001/XMLSchema#float>
+                    PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+                    select * { {
+                        select distinct ?id ?title ?creator ?image ?artform 
+                        (GROUP_CONCAT(DISTINCT ?keywords; SEPARATOR=", ") as ?keywords) 
+                        (GROUP_CONCAT(DISTINCT ?material; SEPARATOR=", ") as ?materials) 
+                        (GROUP_CONCAT(DISTINCT ?loc_content; SEPARATOR=", ") as ?loc_content) 
+                        (GROUP_CONCAT(DISTINCT ?loc_created; SEPARATOR=", ") as ?loc_created) 
+                        (sample(float:(?lat)) as ?lat) (sample(float:(?lng)) as ?lng) (sample(float:(?geonames)) as ?geonames)
+                        where {`;
+        
     if (hasFilter){
         var filter = ''.concat(
             queries.title ?
                 `?object sdo:identifier ?id; dct:title ?title0
-                filter (contains(?title0, "${queries.title}") || contains("${queries.title}", ?title0)) ` : '',
+                filter (contains(?title0, "${queries.title}")) ` : '',
             queries.material ? 
                 `?object sdo:identifier ?id; sdo:material ?material0
                 filter (contains(?material0, "${queries.material}")) ` : '',
@@ -78,7 +77,7 @@ export default function filterSearch(queries: SearchQueries, useLocation: boolea
         query = query.concat(filter, ') . ');
     }
 
-    query = query.concat('} }} limit 50');
+    query = query.concat('} group by ?id ?object ?title ?creator ?image ?artform ?geonames }} limit 50');
     console.log(query);
     query = query.replace(/[\r\n\t]/g, " ");
     

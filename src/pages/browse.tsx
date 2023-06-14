@@ -154,6 +154,8 @@ export default function Browse() {
 			setSearchQueries(initState);
 			setSelectedId('');
 			setList([]);
+		} else {
+			setFilterOpen(false);
 		}
 		if (state !== 'resultDetail') setSelectedPoint(undefined);
 	}, [state])

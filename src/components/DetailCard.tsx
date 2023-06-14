@@ -34,13 +34,13 @@ export default function DetailCard({data, emitClose}: Props) {
                     {(!!data.dimension?.height || !!data.dimension?.width || !!data.dimension?.depth) && 
                         <IconLabel size='l' icon='ruler' text={processDimension(data.dimension).val} msg={processDimension(data.dimension).msg}/> }
                     {!!data.keyword && <IconLabel size='l' icon='key' text={data.keyword} msg='Keywords related the object.'/>}
+                    {!!data.provider && <IconLabel size='l' icon='bank' text={data.provider} showLink msg='Provider of the object.'/>}
                     {!data.latlng && 
                         <>
                             <hr className="my-2"/>
                             <IconLabel size='l' icon='error-alt' text='Map data is not available.' msg='Map does not show the location of this object.'/>
                         </>
                     }
-                    {/* <IconLabel size='l' icon='bank' text={data.provider} msg='Provider of the object.'/> */}
                 </div>
                 <button className={`${style.card__close}`} onClick={emitClose}>
                     <span className='bx bx-x text-xl' />
