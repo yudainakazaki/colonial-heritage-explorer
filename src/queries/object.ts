@@ -18,6 +18,7 @@ export default function object(id: string){
         (GROUP_CONCAT(DISTINCT ?loc_created; SEPARATOR=", ") as ?loc_created) 
         (sample(float:(?lat)) as ?lat) (sample(float:(?lng)) as ?lng) (sample(float:(?geonames)) as ?geonames)
         (sample(?height) as ?height) (sample(?width) as ?width) (sample(?depth) as ?depth)
+        (sample(?description) as ?description) (sample(?comment) as ?comment)
         where {
             ?object sdo:identifier ?id . filter (?id = "${id}")
             optional {?object sdo:identifier ?id;}
@@ -30,6 +31,8 @@ export default function object(id: string){
             optional {?object sdo:keywords ?keywords;}
 	        optional {?object sdo:material ?material;}
             optional {?object sdo:provider ?provider;}
+            optional {?object sdo:description ?description;}
+            optional {?object sdo:comment ?comment;}
             optional {
                 ?object sdo:locationCreated/skos:closeMatch ?geonames.
                 SERVICE <http://factforge.net/repositories/ff-news> {

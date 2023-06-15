@@ -41,7 +41,9 @@ export type DetailAttributes = {
     latlng: {
         lat: number, 
         lng: number
-    }
+    },
+    description: string,
+    comment: string,
 }
 
 export type Dimension = {

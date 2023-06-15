@@ -30,6 +30,15 @@
 
     &__info {
         padding: $len-3;
+        
+        &__detail {
+            max-height: calc($len-9 * 4);
+            overflow-y: auto;
+
+            &::-webkit-scrollbar{
+                display: none;
+            }
+        }
     }
 
     .icon {

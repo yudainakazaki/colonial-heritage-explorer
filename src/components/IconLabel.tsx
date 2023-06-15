@@ -29,13 +29,13 @@ export default function IconLabel(props: IconLabelProps) {
         color: '#438FC1',
     } : {}
 
-    const sizeFont = size === 's' ? 'text-xs mr-0.5' : 'text-sm mr-1 font-normal'
+    const sizeFont = size === 's' ? 'text-xs mr-0.5 mt-0.1' : 'text-sm mr-1 mt-1 font-normal'
     const sizeIcon = size === 's' ? 'text-xs mr-0.5' : 'text-xl mr-1 font-normal'
 
     return (
         <div className={`relative overflow-visible ${size === 'l' ? 'my-0.5' : 'my-0'}`}>
             <div 
-                className='flex justify-left items-center my-0.5 cursor-pointer'
+                className='flex justify-left items-top my-0.5 cursor-pointer'
                 onMouseEnter={onHover}
                 onMouseLeave={onLeave}
             >

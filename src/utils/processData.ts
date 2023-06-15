@@ -23,6 +23,8 @@ export const processData = (data: any, type: DataType) => {
             url: data?.object || undefined,
             image: data?.image || undefined,
             latlng: data?.lat !== null && data?.lng !== null ? {lat: parseFloat(data?.lat), lng: parseFloat(data?.lng)} : undefined,
+            description: data?.description || undefined,
+            comment: data?.comment || undefined,
         } as DetailAttributes;
     
     else
