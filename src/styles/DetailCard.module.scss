@@ -1,7 +1,7 @@
 @use 'variables' as *;
 
 .card {
-    height: calc($len-10 * 8 + $len-2);
+    height: fit-content;
     width: calc($len-10 * 4 + $len-2);
     background-color: white; 
     align-items: top;
