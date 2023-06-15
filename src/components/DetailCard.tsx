@@ -28,7 +28,7 @@ export default function DetailCard({data, emitClose}: Props) {
                     </div>
                     {!!data.creator && <IconLabel size='l' icon='user' text={data.creator} msg='Creator of the object.'/>}
                     {!!data.locationCreated && <IconLabel size='l' icon='map' text={data.locationCreated} msg='Location where the object was originally created.' />}
-                    {!!data.locationContent && <IconLabel size='l' icon='edit-location' text={data.locationContent} msg='Location which the object depicts.' />}
+                    {!!data.locationContent && <IconLabel size='l' icon='edit-location' text={data.locationContent} msg='Location depicted by the object.' />}
                     {!!data.artform && <IconLabel size='l' icon='palette' text={data.artform} msg='Artform of the object.'/>}
                     {!!data.material && <IconLabel size='l' icon='cube' text={data.material} msg='Material of the object.'/>}
                     {(!!data.dimension?.height || !!data.dimension?.width || !!data.dimension?.depth) && 
