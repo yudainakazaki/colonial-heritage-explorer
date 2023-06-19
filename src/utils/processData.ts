@@ -1,4 +1,4 @@
-import { DetailAttributes, CardAttributes, Dimension } from "@/Types";
+import { DetailAttributes, CardAttributes, Dimension } from "@/Types/Types";
 
 type DataType = 'card' | 'detail'
 

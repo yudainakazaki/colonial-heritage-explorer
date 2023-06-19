@@ -1,4 +1,4 @@
-import { CardAttributes } from "@/Types";
+import { CardAttributes } from "@/Types/Types";
 import IconLabel from "./IconLabel";
 import style from '@/styles/ItemCard.module.scss'
 import { NoImage } from "@/components";

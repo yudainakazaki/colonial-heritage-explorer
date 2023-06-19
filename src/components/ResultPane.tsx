@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react'
 import '@/styles/resultpane.scss'
-import { CardAttributes } from '@/Types'
+import { CardAttributes } from '@/Types/Types'
 import { ItemCard, Msg } from '@/components'
-import { LatLng } from '@/Types'
+import { LatLng } from '@/Types/Types'
 
 type Props = {
     isError: Boolean,

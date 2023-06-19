@@ -1,6 +1,6 @@
 import IconLabel from "./IconLabel";
 import style from '@/styles/DetailCard.module.scss'
-import { DetailAttributes } from "@/Types";
+import { DetailAttributes } from "@/Types/Types";
 import { NoImage } from "@/components";
 import { processDimension } from "@/utils/processData";
 

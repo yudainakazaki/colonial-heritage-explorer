@@ -3,7 +3,7 @@ import DropDownMenu from './DropDownMenu';
 import { artformsQuery, locationsQuery, materialsQuery } from '@/queries/selectList';
 import React, { useState, useEffect } from 'react';
 import { processArtforms, processLocations, processMaterials } from '@/utils/processData';
-import { Filters } from '@/Types';
+import { Filters } from '@/Types/Types';
 import axios from 'axios';
 import { Info } from '@/components';
 

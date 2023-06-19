@@ -1,12 +1,11 @@
 import { Map, ResultPane, SearchBar, FilterModal, DetailCard } from '@/components';
-import IndexPage from '@/pages/IndexPage';
 import '@/styles/browse.scss';
 import React, { useState, useEffect } from 'react'
-import { CardAttributes, State, Filters, Bounds, LatLng } from '@/Types';
+import { CardAttributes, State, Filters, Bounds, LatLng } from '@/Types/Types';
 import { processData } from '@/utils/processData'
 import keywordsearch from '@/queries/keyword'
 import filterSearch from '@/queries/filter';
-import { DetailAttributes, SearchQueries } from '@/Types';
+import { DetailAttributes, SearchQueries } from '@/Types/Types';
 import object from '@/queries/object';
 import axios from 'axios';
 
@@ -180,7 +179,6 @@ export default function Browse() {
 	
     return (
 		<>
-			<IndexPage />
 			<main className="w-full h-full browse flex flex-col relative">
 				<SearchBar 
 					emitSearch={getKeyword} 

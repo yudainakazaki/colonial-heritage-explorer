@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import '@/styles/search-bar.scss'
 import '@/styles/_utils.scss'
 import { BeatLoader } from 'react-spinners'
-import { State } from '@/Types'
+import { State } from '@/Types/Types'
 
 type Props = {
     emitSearch: (keyword: string) => void;

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import 'leaflet/dist/leaflet.css'
 import { MapContainer, TileLayer, Marker, Popup, ZoomControl, useMap, useMapEvents } from 'react-leaflet'
 import '@/styles/map.scss'
-import { CardAttributes, Bounds } from '@/Types';
+import { CardAttributes, Bounds } from '@/Types/Types';
 import { useRef } from 'react';
 import markerIcon from './markerIcon';
 import L from 'leaflet'
@@ -106,11 +106,7 @@ const Map = ({ data, selectedPoint, originalCenter, emitBounds }: Props) => {
                             icon={markerIcon('blue')}
                             position={item.latlng}
                             key = {i}
-                        >
-                            <Popup>
-                                <a href={item.object} target='_blank'>TriplyDB<i className='bx bx-link-external ml-1' /></a>
-                            </Popup>
-                        </Marker>
+                        />
                     )
                 })
             }
