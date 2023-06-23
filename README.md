@@ -29,4 +29,5 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 
 ## Deployment 
 The application is available from the link below.
--> https://colonial-heritage-explorer.vercel.app[https://colonial-heritage-explorer.vercel.app]
+
+-> https://colonial-heritage-explorer.vercel.app
